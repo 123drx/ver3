@@ -16,10 +16,10 @@ import danielproj.ver2.objects.Subject;
 
 public class GeneticAlgorithm {
     
-    private static final int POPULATION_SIZE = 250;
+    private static final int POPULATION_SIZE = 320;
     private static int MAX_GENERATIONS = 400;
-    private static double MUTATION_RATE = 0.55;
-    private static double BIGMUTATION_RATE = 0.17;  
+    private static double MUTATION_RATE = 0.45;
+    private static double BIGMUTATION_RATE = 0.21;  
     private int CrossOverPrecent = 75; //what precentage of the population will crossover
 
    // TODO add that if a teacher teaches 2 classes in 2 days he 
@@ -30,8 +30,9 @@ public class GeneticAlgorithm {
     
    
     public School Geneticalgorithm(School school , String ClassName) {
-        int count = 0;
         //adds empty subject for every class
+        int pastgenetarionbestfittnes = 0;
+        int count = 0;
         List<School> population = initializePopulationByClass(school,ClassName);
         List<Integer> SortedIndexes = new ArrayList<>();
         // Evolution
@@ -41,6 +42,7 @@ public class GeneticAlgorithm {
             for (School scl : population) {
                 Fitnesses.add(scl.evaluateSchoolClass(ClassName));
             }
+            
 
             List<School> newPopulation = new ArrayList<>();
 
@@ -62,40 +64,11 @@ public class GeneticAlgorithm {
 
                     Random rand = new Random();
                     double randomNumber = rand.nextInt(101) / 100.0;
-                    //count how many diffrent Evauations there is in the population
-                    // int Diversity = calculateDiversity(Evaluations);
-
-                    // if(Diversity < POPULATION_SIZE/5)
-                    // {
-                    //     SUPERMUTATION_RATE += 0.02;
-                    //     MUTATION_RATE += 0.05;
-                    // }
-                    // else if(Diversity < POPULATION_SIZE/10)
-                    // {
-                    //     SUPERMUTATION_RATE += 0.01;
-                    //     MUTATION_RATE += 0.04;
-                    // }
-                    // else if(Diversity < POPULATION_SIZE/25)
-                    // {
-                    //     MUTATION_RATE += 0.15;
-                    // }
-                    // else if(Diversity < POPULATION_SIZE/50)
-                    // {
-                    //     MUTATION_RATE += 0.1;
-                    // }
-                    // else if(Diversity > POPULATION_SIZE/2)
-                    // {
-                    //     SUPERMUTATION_RATE -= 0.01;
-                    //     MUTATION_RATE += 0.05;
-                    // }
-                    
-
-                    
                     if (randomNumber < BIGMUTATION_RATE) {
-                        child.BigMuate(ClassName, child.getClasses().get(child.getClassIndexByName(ClassName)).getSubjects());
+                        child.BigMuate(ClassName, child.getClasses().get(child.getClassIndex(ClassName)).getSubjects());
                     }
-                    else if (randomNumber < MUTATION_RATE) {
-                        child.mutate(ClassName, child.getClasses().get(child.getClassIndexByName(ClassName)).getSubjects()); 
+                    if (randomNumber < MUTATION_RATE) {
+                        child.mutate(ClassName, child.getClasses().get(child.getClassIndex(ClassName)).getSubjects()); 
                     }
 
                     newPopulation.add(child);
@@ -106,44 +79,19 @@ public class GeneticAlgorithm {
                     newPopulation.add(population.get(SortedIndexes.get(in)));
 
                 }
-                // if(generation == 25&&i==1||generation==30&&i==1||generation==35&&i==1||generation==36&&i==1||generation==37&&i==1)
-                // {
-                //     String s = "Evals : ";
-                //         s+="[";
-                //     for(int Eval : Evaluations)
-                //     {
-                //         s+=Eval+",";
-                //     }
-                //     s+="]";
-                //     System.out.println(s);
-                // }
-                // System.out.println(
-                // "=========================================================================generation
-                // : " + i
-                // + "=======================");
-                // int bestIndex = Evaluations.indexOf(Collections.max(Evaluations));
-                // population.get(bestIndex).printScheduleteachers();
-                // System.out.println(
-                // "==============+=====================++===========================+++====================================++++================");
             }
 
+            
             // Replace old population with new population
             population = newPopulation;
            
 
             // Output best schedule in this generation
             int bestIndex = Fitnesses.indexOf(Collections.max(Fitnesses));
-            if(generation == MAX_GENERATIONS)
-            {
-                if( Fitnesses.get(bestIndex) <= 70 && count < 100)
-                {
-                    MAX_GENERATIONS +=1;
-                    count += 1;
 
-                }
-            }
+            
             // population.get(bestIndex).printSchedule();
-            System.out.println("Generation " + generation + ": Best Fitness : " + Fitnesses.get(bestIndex)+ "\t"+"diaversity : "+calculateDiversity(Fitnesses) +  "Avrage Fitnnes : "+claculateavragefittnes(Fitnesses));
+            System.out.println("Generation " + generation + ": Best Fitness : " + Fitnesses.get(bestIndex)+ "\t"+"diaversity : "+calculateDiversity(Fitnesses) +  "\tAvrage Fitnnes : "+claculateavragefittnes(Fitnesses) + "\t POPULATION SIZE : " + population.size());
             // System.out.println("Generation " + generation + ": Best Fitness : " + Evaluations.get(bestIndex)+" Mutation Rate " + MUTATION_RATE+" SuperMutation Rate : "+SUPERMUTATION_RATE + "DIaversity : "+calculateDiversity(Evaluations));
             // population.get(bestIndex).printScheduleteachers();
         }
@@ -207,7 +155,6 @@ public class GeneticAlgorithm {
                 Subjects = school.getClasses().get(j).getSubjects();
                 schedule.InitSchedule();
                 schedule.FillThisScheduleWithLessons(Subjects);
-                
                 s.getClasses().get(j).setSchedule(schedule);
                 Population.add(s);
                 }

@@ -7,20 +7,22 @@ import java.util.List;
 public class SchoolClass {
     private String className;
     private Schedule schedule;
-    private List<Subject> subjects = new ArrayList<>();
-    private List<String> Teachers = new ArrayList<>();
-    private List<Lesson> LockedLessons = new ArrayList<>();
+    private ArrayList<Subject> subjects = new ArrayList<>();
+    private ArrayList<String> Teachers = new ArrayList<>();
+    private ArrayList<Lesson> LockedLessons = new ArrayList<>();
+
 
     public void adjustEmptySubject() {
         int MaxD = Schedule.MaxDays;
         int MaxH = Schedule.MaxHours;
         int EmptySubjectWeeklyHours = (MaxD * MaxH);
+        EmptySubjectWeeklyHours -= MaxD;//Remove the amount of breaks in the schedule(every day 1 break)
 
         for (Subject subject : subjects) {
             EmptySubjectWeeklyHours -= subject.getWeaklyHours();
         }
 
-        if (!IsSubjectExist("Empty")) {
+        if (!isSubjectExist("Empty")) {
             Subject s = new Subject("Empty");
             s.setTeacherName("Non");
             s.setWeaklyHours(EmptySubjectWeeklyHours);
@@ -29,7 +31,7 @@ public class SchoolClass {
         }
         else {
             subjects.get(getSubjectIndex("Empty")).setWeaklyHours(EmptySubjectWeeklyHours);
-            System.out.println(subjects.get(getSubjectIndex("Empty")).getWeaklyHours() + "<- Weekly hours");
+            System.out.println(subjects.get(getSubjectIndex("Empty")).getWeaklyHours() + "<- Empty Weekly Hours");
         }
         
         
@@ -38,12 +40,10 @@ public class SchoolClass {
 
    public Subject getSubject(String SubjectName)
    {
-    for(int i = 0 ; i < subjects.size() ; i++)
+    for(Subject subject : subjects)
     {
-        if(subjects.get(i).getSubjectName().equals(SubjectName))
-        {
-            return subjects.get(i);
-        }
+        if(subject.getSubjectName().equals(SubjectName))
+        return subject;
     }
     return null;
    }
@@ -67,14 +67,28 @@ public class SchoolClass {
         return -1;
     }
 
-    public boolean IsSubjectExist(String SubjectName) {
+    public boolean IsSubjectExist(Subject SubjectName) {
         for (Subject subject : subjects) {
-            if (SubjectName.equals(subject.getSubjectName())) {
+            if (SubjectName.getSubjectName().equals(subject.getSubjectName())&&SubjectName.getTeacherName().equals(subject.getTeacherName())) {
                 return true;
             }
         }
         return false;
     }
+
+    public ArrayList<Subject> getTeachersSubjectsInClass(String TeachersName)
+    {
+        ArrayList<Subject> subjs = new ArrayList<>();
+        for(Subject s : this.getSubjects())
+        {
+            if(s.getTeacherName().equals(TeachersName))
+            {
+                subjs.add(s);
+            }
+        }
+        return subjs;
+    }
+
 
     public void addLockedLesson(Lesson lesson) {
         this.LockedLessons.add(lesson);
@@ -145,7 +159,7 @@ public class SchoolClass {
         this.Teachers.add(teacher);
     }
 
-    public void setSubjects(List<Subject> subjects) {
+    public void setSubjects(ArrayList<Subject> subjects) {
         this.subjects = subjects;
     }
 
@@ -187,15 +201,17 @@ public class SchoolClass {
         return Teachers;
     }
 
-    public void setTeachers(List<String> teachers) {
+    public void setTeachers(ArrayList<String> teachers) {
         Teachers = teachers;
     }
+
+    
 
     public List<Lesson> getLockedLessons() {
         return LockedLessons;
     }
 
-    public void setLockedLessons(List<Lesson> lockedLessons) {
+    public void setLockedLessons(ArrayList<Lesson> lockedLessons) {
         LockedLessons = lockedLessons;
     }
 

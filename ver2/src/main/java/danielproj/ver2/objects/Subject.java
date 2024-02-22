@@ -8,6 +8,8 @@ public class Subject {
     private String TeacherName;
     private Set<String> classes = new HashSet<>();
     private int WeaklyHours;
+    private int Priority;
+    
 
 
     public void addClass(String ClassName)
@@ -15,15 +17,39 @@ public class Subject {
         this.classes.add(ClassName);
     }
 
+    public Subject(String SubjectName , String TeachersName , int WeeklyHours)
+    {
+        this.SubjectName = SubjectName;
+        this.TeacherName = TeachersName; 
+        this.WeaklyHours = WeeklyHours;
+        this.Priority = 3;
+    }
+
+    public Subject(String SubjectName , String TeachersName , int WeeklyHours , int priority)
+    {
+        this.SubjectName = SubjectName;
+        this.TeacherName = TeachersName; 
+        this.WeaklyHours = WeeklyHours;
+        this.Priority = priority;
+    }
+
     public Subject()
     {
 
+    }
+
+    public Subject(String SubjectName,String TeacherName ,Set<String> Classes)
+    {
+        this.setSubjectName(SubjectName);
+        this.setClasses(Classes);
+        this.setTeacherName(TeacherName); 
     }
 
     public Subject(String SubjectName,Set<String> Classes)
     {
         this.setSubjectName(SubjectName);
         this.setClasses(Classes);
+        this.Priority = 3;
     }
     
     public Subject(Subject otherSubject) {
@@ -31,17 +57,15 @@ public class Subject {
         this.TeacherName = otherSubject.getTeacherName();
         this.WeaklyHours = otherSubject.getWeaklyHours();
         this.classes = otherSubject.getClasses();
-    }
-
-
-    public Subject(String SubjectName ,String className)
-    {
+        this.Priority = otherSubject.getPriority();
 
     }
+
 
     public Subject(String Name)
     {
         this.SubjectName = Name;
+        this.Priority = 3;
     }
     
     public String getSubjectName() {
@@ -74,6 +98,14 @@ public class Subject {
 
     public void setClasses(Set<String> classes) {
         this.classes = classes;
+    }
+
+    public int getPriority() {
+        return Priority;
+    }
+
+    public void setPriority(int priority) {
+        Priority = priority;
     }
     
 

@@ -299,19 +299,26 @@ public class Schedule {
        return mutated;
     }
 
+    // public Schedule Bigmutate(List<Subject> subjects) {
+    //     Schedule mutated = new Schedule(this);
+    //     Schedule NewRandomSchedule = new Schedule();
+    //     NewRandomSchedule.InitSchedule();
+    //     NewRandomSchedule.FillThisScheduleWithLessons(subjects);
+    //     mutated.crossover(mutated, NewRandomSchedule);
+    //     return mutated;
+
+    // }
+
      public Schedule Bigmutate(List<Subject> subjects) {
         Schedule mutated = new Schedule(this);
         Random random = new Random();
         //Get a Rundom Subject
-        for(int i = 0 ; i < 2 ;i++)
+        for(int i = 0 ; i < 3 ;i++)
        {Subject s  = subjects.get(random.nextInt(subjects.size()));
        //Create the lesson the Mutated is gonna get
        Lesson NewLesson = new Lesson();
        NewLesson.setLessonSubject(s.getSubjectName());
        NewLesson.setTeacher(s.getTeacherName());
-       
-    
-
        int randHour = random.nextInt(MaxHours);
        int randDay = random.nextInt(MaxDays);
        
@@ -396,17 +403,6 @@ public class Schedule {
     // System.out.println(
     // "----------------------------------------------------------scheduale---------------------------------------------------------");
     // }
-
-    public void fillschedualwithLesson(Lesson l) {
-
-        for (int i = 0; i < MaxDays; i++) {
-            for (int j = 0; j < MaxHours; j++) {
-                if (j != LunchHour - StartingHour) {
-                    SetLesson(i, j, l);
-                }
-            }
-        }
-    }
 
     public int CountWeeklyHours(String subject) {
         int count = 0;

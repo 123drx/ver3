@@ -21,8 +21,6 @@ public class Teacher {
     private boolean[] DayConstrains = new boolean[MaxDays];
     private List<Subject> Subjects = new ArrayList<>();
 
-
-
     private static final Map<Integer, String> daysOfWeekMap = new HashMap<>();
     static {
         daysOfWeekMap.put(0, "Sunday");
@@ -54,11 +52,11 @@ public class Teacher {
             boolean bol = false;
             if (this.getDayConstrains()[day] == true) {
                 for (int hour = 0; hour < Schedule.MaxHours; hour++) {
-                    if (this.getHourPrefrences()[day][hour] == true && bol==false) {
+                    if (this.getHourPrefrences()[day][hour] == true && bol == false) {
                         bol = true;
                         starthour = hour;
 
-                    } else if(this.getHourPrefrences()[day][hour] == false) {
+                    } else if (this.getHourPrefrences()[day][hour] == false) {
                         if (bol == true) {
                             EndHour = hour;
                             consts[day] = new Constrains(starthour, EndHour);
@@ -100,6 +98,28 @@ public class Teacher {
         this.Subjects.add(sbj);
     }
 
+    public int getsubjectindex(Subject s) {
+        for (int i = 0; i < Subjects.size(); i++) {
+            if (s.getSubjectName().equals(Subjects.get(i).getSubjectName())
+                    && s.getTeacherName().equals(Subjects.get(i).getTeacherName())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void AdjustWeeklyHours(Subject s) {
+        for (Subject subj : Subjects) {
+            if (subj.getTeacherName() == null) {
+                System.out.println(s.getSubjectName());
+            }
+            if (subj.getSubjectName().equals(s.getSubjectName()) && subj.getTeacherName().equals(s.getTeacherName())
+                    && subj.getWeaklyHours() != s.getWeaklyHours()) {
+                this.Subjects.get(getsubjectindex(subj)).setWeaklyHours(s.getWeaklyHours());
+            }
+        }
+    }
+
     public List<Subject> getSubjects() {
         return Subjects;
     }
@@ -116,21 +136,38 @@ public class Teacher {
         this.name = Name;
     }
 
-   public int getWeeklyHours()
+   public int[][] getAvaliability()
    {
-    int count =0;
-        for(int Day = 0 ; Day < MaxDays ; Day++)
-        {
-            for(int Hour = 0 ; Hour < MaxHours ; Hour++)
+    int[][] indexes = new int[MaxDays][MaxHours];
+    for (int i = 0; i < MaxDays; i++) {
+        for (int j = 0; j < MaxHours; j++) {
+            if(HourPrefrences[i][j]==true)
             {
-                if(this.getHourPrefrences()[Day][Hour] == true)
-                {
-                    count++;
+                indexes[i][j] = 1;
+            }  
+            else
+            {
+                indexes[i][j] = 0;
+            } 
+        }
+    }
+    return indexes;
+   }
+
+    public int getWeeklyHours() {
+        int count = 0;
+        for (int Day = 0; Day < MaxDays; Day++) {
+            for (int Hour = 0; Hour < MaxHours; Hour++) {
+                if (!(Hour == Schedule.LunchHour - Schedule.StartingHour)) {
+                    if (this.getHourPrefrences()[Day][Hour] == true) {
+                        count++;
+                    }
                 }
             }
         }
         return count;
-   }
+    }
+
 
     public void setConstrains(Constrains[] constrains) {
         for (int i = 0; i < MaxDays; i++) {
